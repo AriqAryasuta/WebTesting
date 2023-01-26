@@ -1,11 +1,9 @@
 const {Client} = require('pg')
+const {Sequelize} = require('sequelize')
 
-const client = new Client({
-    host: "localhost",
-    user: "postgres",
-    port: 5432,
-    password: "atA_251201",
-    database: "mapDb"
-})
+const db = new Sequelize('mappingDIY','postgres','raven03',{
+    host: 'localhost',
+    dialect: 'postgres'
+});
 
-module.exports = client
+module.exports = db;

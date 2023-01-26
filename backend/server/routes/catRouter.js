@@ -1,14 +1,14 @@
 const express = require('express');
-const route = express.Router();
-
 const catControl = require('../controller/catController');
+const route = express.Router();
 
 //category router
 route.post('/', catControl.createCategory);
 
 route.get('/',catControl.getAllCategory);
-route.get('/:id',catControl.getCategoryByID);
+route.get('/:category',catControl.getCategoryByID);
 
-route.delete('/:id,catControl.deleteCategory');
+route.put('/:category', catControl.addAttribut);
+route.delete('/:category', catControl.deleteCategory);
 
 module.exports= route
