@@ -24,7 +24,7 @@ const AddCategory = ({url, selfPopUp, chooseCatPopUp, addButtonVisible, setLoadi
 
     return ( 
         <>
-            <div className="overlay z-100"></div>
+            {/* <div className="overlay z-100"></div> */}
             <div className="container w-fit mx-auto">
                 <form className="w-screen max-w-xl mx-8 bg-white shadow-xl rounded-3xl px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
                 <div className="flex justify-between">

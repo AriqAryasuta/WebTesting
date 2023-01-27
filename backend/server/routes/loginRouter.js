@@ -1,14 +1,13 @@
 const express = require('express');
-const {getUser, newUser, login, logout} = require('../controller/users')
+const route = express.Router();
+const userControl = require('../controller/users')
 const { verifyToken } = require('../middleware/verifyToken')
 const {refreshToken} = require('../controller/refreshToken')
 
-const route = express.Router()
-
-route.get('/users', verifyToken, getUser)
-route.post('/users', newUser)
-route.post('/login', login)
+route.get('/', verifyToken, userControl.getUser)
+route.post('/', userControl.newUser)
+route.post('/login', userControl.login)
 route.get('/token', refreshToken)
-route.delete('/logout', logout)
+route.delete('/logout', userControl.logout)
 
-module.exports = route;
+module.exports = route

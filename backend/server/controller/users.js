@@ -1,6 +1,10 @@
 const users = require('../model/userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const path = require('path')
+const dotenv = require('dotenv');
+
+dotenv.config({ path:"../../config.env"})
 
 exports.getUser = async(req, res) => {
     try {
@@ -15,6 +19,7 @@ exports.getUser = async(req, res) => {
 
 exports.newUser = async(req, res) => {
     const {name, password} = req.body
+
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt)
     try{
@@ -37,26 +42,36 @@ exports.login = async(req, res) =>{
         });
         const match = await bcrypt.compare(req.body.password, user[0].password)
         if(!match) res.status(400).json({msg: "Password tidak sesuai"})
-        const userId = user[0].id
+        const id = user[0].id
         const name = user[0].name
-        const accessToken = jwt.sign({userId, name}, process.env.ACCESS_TOKEN_SECRET, {
+        console.log(process.env.ACCESS_TOKEN_SECRET)
+        const token = jwt.sign({id, name}, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: '20s'
         })
-        const refreshToken = jwt.sign({userId, name}, process.env.REFRESH_TOKEN_SECRET, {
+        const refreshToken = jwt.sign({id, name}, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
         })
         await users.update({refresh_token:refreshToken}, {
             where:{
-                id:userId
+                id:id
             }
         })
         res.cookie('refreshToken', refreshToken, {
             httpOnly:true,
             maxAge: 24 * 60 * 60 * 1000
         })
-        res.json({accessToken})
-    }catch{ 
-        res.status(404).json({msg:"Username tidak ditemukan"})
+        res.status(200).json({
+            success: true,
+            statusCode: res.statusCode,
+            message: "Login succesfully",
+            data:{
+                name,
+                token,
+                id
+            }
+        })
+    }catch(error){ 
+        res.status(404).json({msg:error.message})
     }
 }
 
